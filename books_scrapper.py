@@ -2,9 +2,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
-import time
 
 def scrape_books():
     url = "http://books.toscrape.com/"
@@ -22,16 +23,19 @@ def scrape_books():
     
     try:
         driver.get(url)
-        time.sleep(3)  # Allow time for the page to load
+        wait = WebDriverWait(driver, 10)
+        
+        # Wait until books are loaded
+        wait.until(EC.presence_of_element_located((By.XPATH, "//article[@class='product_pod']")))
         
         # Extract book titles, prices, and availability
         books = driver.find_elements(By.XPATH, "//article[@class='product_pod']")
         
         book_data = []
         for book in books:
-            title = book.find_element(By.TAG_NAME, "h3").text
+            title = book.find_element(By.TAG_NAME, "h3").find_element(By.TAG_NAME, "a").get_attribute("title")
             price = book.find_element(By.CLASS_NAME, "price_color").text
-            availability = book.find_element(By.CLASS_NAME, "instock.availability").text.strip()
+            availability = book.find_element(By.XPATH, ".//p[contains(@class, 'instock')]" ).text.strip()
             
             book_data.append({
                 "Title": title,
