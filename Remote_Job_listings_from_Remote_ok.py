@@ -46,3 +46,5 @@ df = pd.DataFrame(job_data)
 
 # Save to CSV
 df.to_csv("remote_jobs.csv", index=False)
+
+print("✅ Scraping complete. Saved to remote_jobs.csv")
