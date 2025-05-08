@@ -31,3 +31,13 @@ for job in jobs:
         location = job.find("div", class_="location").text.strip() if job.find("div", class_="location") else "Worldwide"
         tags = [tag.text.strip() for tag in job.find_all("span", class_="tag")]
         link = "https://remoteok.com" + job.get("data-href")
+
+        job_data.append({
+            "Title": title,
+            "Company": company,
+            "Location": location,
+            "Tags": ", ".join(tags),
+            "Link": link
+        })
+    except Exception as e:
+        print("Error parsing job:", e)
