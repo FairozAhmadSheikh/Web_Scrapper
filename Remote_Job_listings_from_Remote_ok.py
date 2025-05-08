@@ -41,3 +41,8 @@ for job in jobs:
         })
     except Exception as e:
         print("Error parsing job:", e)
+# Convert to DataFrame
+df = pd.DataFrame(job_data)
+
+# Save to CSV
+df.to_csv("remote_jobs.csv", index=False)
